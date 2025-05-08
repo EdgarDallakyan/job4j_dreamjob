@@ -3,6 +3,7 @@ package ru.job4j.dreamjob.repository;
 import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.model.Candidate;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,12 +19,12 @@ public class MemoryCandidateRepository implements CandidateRepository {
     private final Map<Integer, Candidate> candidates = new HashMap<>();
 
     private MemoryCandidateRepository() {
-        save(new Candidate(0, "Candidate1", "Description1"));
-        save(new Candidate(0, "Candidate2", "Description2"));
-        save(new Candidate(0, "Candidate3", "Description3"));
-        save(new Candidate(0, "Candidate4", "Description4"));
-        save(new Candidate(0, "Candidate5", "Description5"));
-        save(new Candidate(0, "Candidate6", "Description6"));
+        save(new Candidate(0, "Candidate1", "Description1", LocalDateTime.now()));
+        save(new Candidate(0, "Candidate2", "Description2", LocalDateTime.now()));
+        save(new Candidate(0, "Candidate3", "Description3", LocalDateTime.now()));
+        save(new Candidate(0, "Candidate4", "Description4", LocalDateTime.now()));
+        save(new Candidate(0, "Candidate5", "Description5", LocalDateTime.now()));
+        save(new Candidate(0, "Candidate6", "Description6", LocalDateTime.now()));
     }
 
     public static MemoryCandidateRepository getInstance() {
@@ -48,7 +49,8 @@ public class MemoryCandidateRepository implements CandidateRepository {
                 (id, oldCandidate) ->
                         new Candidate(oldCandidate.getId(),
                                 candidate.getName(),
-                                candidate.getDescription())) != null;
+                                candidate.getDescription(),
+                                candidate.getCreationDate())) != null;
     }
 
     @Override

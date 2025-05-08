@@ -10,11 +10,11 @@ public class Candidate {
     private String description;
     LocalDateTime creationDate;
 
-    public Candidate(int id, String name, String description) {
+    public Candidate(int id, String name, String description, LocalDateTime creationDate) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.creationDate = LocalDateTime.now();
+        this.creationDate = creationDate;
     }
 
     public int getId() {

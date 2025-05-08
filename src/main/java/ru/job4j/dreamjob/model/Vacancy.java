@@ -6,18 +6,18 @@ import java.util.Objects;
 public class Vacancy {
 
     private int id;
-
     private String title;
-
     private String description;
+    private LocalDateTime creationDate = LocalDateTime.now();
 
-    LocalDateTime creationDate;
+    public Vacancy() {
+    }
 
-    public Vacancy(int id, String title, String description) {
+    public Vacancy(int id, String title, String description, LocalDateTime creationDate) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.creationDate = LocalDateTime.now();
+        this.creationDate = creationDate;
     }
 
     public int getId() {
