@@ -19,4 +19,5 @@ public class SimpleCityService implements CityService {
     public Collection<City> findAll() {
         return cityRepository.findAll();
     }
+
 }

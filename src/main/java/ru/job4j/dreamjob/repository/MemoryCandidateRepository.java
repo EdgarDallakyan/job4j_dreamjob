@@ -60,4 +60,5 @@ public class MemoryCandidateRepository implements CandidateRepository {
     public Collection<Candidate> findAll() {
         return candidates.values();
     }
+
 }

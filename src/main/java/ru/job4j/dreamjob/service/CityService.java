@@ -6,4 +6,5 @@ import java.util.Collection;
 
 public interface CityService {
     Collection<City> findAll();
+
 }
