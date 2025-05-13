@@ -20,12 +20,12 @@ public class MemoryVacancyRepository implements VacancyRepository {
     private final Map<Integer, Vacancy> vacancies = new ConcurrentHashMap<>();
 
     private MemoryVacancyRepository() {
-        save(new Vacancy(0, "Intern Java Developer", "Description1", LocalDateTime.now()));
-        save(new Vacancy(0, "Junior Java Developer", "Description2", LocalDateTime.now()));
-        save(new Vacancy(0, "Junior+ Java Developer", "Description3", LocalDateTime.now()));
-        save(new Vacancy(0, "Middle Java Developer", "Description4", LocalDateTime.now()));
-        save(new Vacancy(0, "Middle+ Java Developer", "Description5", LocalDateTime.now()));
-        save(new Vacancy(0, "Senior Java Developer", "Description6", LocalDateTime.now()));
+        save(new Vacancy(0, "Intern Java Developer", "Description1", LocalDateTime.now(), true));
+        save(new Vacancy(0, "Junior Java Developer", "Description2", LocalDateTime.now(), true));
+        save(new Vacancy(0, "Junior+ Java Developer", "Description3", LocalDateTime.now(), true));
+        save(new Vacancy(0, "Middle Java Developer", "Description4", LocalDateTime.now(), false));
+        save(new Vacancy(0, "Middle+ Java Developer", "Description5", LocalDateTime.now(), true));
+        save(new Vacancy(0, "Senior Java Developer", "Description6", LocalDateTime.now(), true));
     }
 
     @Override
@@ -42,11 +42,12 @@ public class MemoryVacancyRepository implements VacancyRepository {
 
     @Override
     public boolean update(Vacancy vacancy) {
-        return vacancies.computeIfPresent(vacancy.getId(),
-                (id, oldVacancy) -> new Vacancy(oldVacancy.getId(),
+        return vacancies.computeIfPresent(vacancy.getId(), (id, oldVacancy) ->
+                new Vacancy(oldVacancy.getId(),
                         vacancy.getTitle(),
                         vacancy.getDescription(),
-                        vacancy.getCreationDate())) != null;
+                        vacancy.getCreationDate(),
+                        vacancy.getVisible())) != null;
     }
 
     @Override
