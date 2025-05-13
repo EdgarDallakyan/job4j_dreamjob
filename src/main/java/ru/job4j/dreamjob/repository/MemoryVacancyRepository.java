@@ -20,12 +20,12 @@ public class MemoryVacancyRepository implements VacancyRepository {
     private final Map<Integer, Vacancy> vacancies = new ConcurrentHashMap<>();
 
     private MemoryVacancyRepository() {
-        save(new Vacancy(0, "Intern Java Developer", "Description1", LocalDateTime.now(), true));
-        save(new Vacancy(0, "Junior Java Developer", "Description2", LocalDateTime.now(), true));
-        save(new Vacancy(0, "Junior+ Java Developer", "Description3", LocalDateTime.now(), true));
-        save(new Vacancy(0, "Middle Java Developer", "Description4", LocalDateTime.now(), false));
-        save(new Vacancy(0, "Middle+ Java Developer", "Description5", LocalDateTime.now(), true));
-        save(new Vacancy(0, "Senior Java Developer", "Description6", LocalDateTime.now(), true));
+        save(new Vacancy(0, "Intern Java Developer", "Description1", LocalDateTime.now(), true, 1));
+        save(new Vacancy(0, "Junior Java Developer", "Description2", LocalDateTime.now(), true,2));
+        save(new Vacancy(0, "Junior+ Java Developer", "Description3", LocalDateTime.now(), true, 3));
+        save(new Vacancy(0, "Middle Java Developer", "Description4", LocalDateTime.now(), false, 1));
+        save(new Vacancy(0, "Middle+ Java Developer", "Description5", LocalDateTime.now(), true,1));
+        save(new Vacancy(0, "Senior Java Developer", "Description6", LocalDateTime.now(), true,3));
     }
 
     @Override
@@ -47,7 +47,8 @@ public class MemoryVacancyRepository implements VacancyRepository {
                         vacancy.getTitle(),
                         vacancy.getDescription(),
                         vacancy.getCreationDate(),
-                        vacancy.getVisible())) != null;
+                        vacancy.getVisible(),
+                        vacancy.getCityId())) != null;
     }
 
     @Override
