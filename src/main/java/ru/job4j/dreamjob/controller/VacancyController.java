@@ -33,21 +33,27 @@ public class VacancyController {
         return "vacancies/list";
     }
 
+    @GetMapping("/create")
+    public String getCreationPage(Model model) {
+        model.addAttribute("cities", cityService.findAll());
+        return "vacancies/create";
+    }
+
     @PostMapping("/create")
-    public String create(@ModelAttribute Vacancy vacancy, @RequestParam MultipartFile file, Model model) {
+    public String create(@ModelAttribute Vacancy vacancy,
+                         @RequestParam(required = false) MultipartFile file,
+                         Model model) {
         try {
-            vacancyService.save(vacancy, new FileDto(file.getOriginalFilename(), file.getBytes()));
+            FileDto fileDto = null;
+            if (file != null && !file.isEmpty()) {
+                fileDto = new FileDto(file.getOriginalFilename(), file.getBytes());
+            }
+            vacancyService.save(vacancy, fileDto);
             return "redirect:/vacancies";
         } catch (Exception exception) {
             model.addAttribute("message", exception.getMessage());
             return "errors/404";
         }
-    }
-
-    @GetMapping("/create")
-    public String getCreationPage(Model model) {
-        model.addAttribute("cities", cityService.findAll());
-        return "vacancies/create";
     }
 
     @GetMapping("/{id}")
@@ -63,9 +69,15 @@ public class VacancyController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute Vacancy vacancy, @RequestParam MultipartFile file, Model model) {
+    public String update(@ModelAttribute Vacancy vacancy,
+                         @RequestParam(required = false) MultipartFile file,
+                         Model model) {
         try {
-            var isUpdated = vacancyService.update(vacancy, new FileDto(file.getOriginalFilename(), file.getBytes()));
+            FileDto fileDto = null;
+            if (file != null && !file.isEmpty()) {
+                fileDto = new FileDto(file.getOriginalFilename(), file.getBytes());
+            }
+            var isUpdated = vacancyService.update(vacancy, fileDto);
             if (!isUpdated) {
                 model.addAttribute("message", "Вакансия с указанным идентификатором не найдена");
                 return "errors/404";
@@ -75,7 +87,6 @@ public class VacancyController {
             model.addAttribute("message", exception.getMessage());
             return "errors/404";
         }
-
     }
 
     @GetMapping("/delete/{id}")

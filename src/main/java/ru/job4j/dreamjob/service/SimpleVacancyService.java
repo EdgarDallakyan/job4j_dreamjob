@@ -23,7 +23,9 @@ public class SimpleVacancyService implements VacancyService {
 
     @Override
     public Vacancy save(Vacancy vacancy, FileDto image) {
-        saveNewFile(vacancy, image);
+        if (image != null && image.getContent() != null && image.getContent().length > 0) {
+            saveNewFile(vacancy, image);
+        }
         return vacancyRepository.save(vacancy);
     }
 
@@ -45,16 +47,18 @@ public class SimpleVacancyService implements VacancyService {
 
     @Override
     public boolean update(Vacancy vacancy, FileDto image) {
-        var isNewFileEmpty = image.getContent().length == 0;
-        if (isNewFileEmpty) {
-            return vacancyRepository.update(vacancy);
+        /* Если передан новый файл (не null и не пустой)*/
+        if (image != null && image.getContent() != null && image.getContent().length > 0) {
+            var oldFileId = vacancy.getFileId();
+            saveNewFile(vacancy, image);
+            boolean isUpdated = vacancyRepository.update(vacancy);
+            if (isUpdated) {
+                fileService.deleteById(oldFileId);
+            }
+            return isUpdated;
         }
-        /* если передан новый не пустой файл, то старый удаляем, а новый сохраняем */
-        var oldFileId = vacancy.getFileId();
-        saveNewFile(vacancy, image);
-        var isUpdated = vacancyRepository.update(vacancy);
-        fileService.deleteById(oldFileId);
-        return isUpdated;
+        /* Если файл не передан или пустой - обновляем только данные вакансии*/
+        return vacancyRepository.update(vacancy);
     }
 
     @Override

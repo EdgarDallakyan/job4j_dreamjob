@@ -16,14 +16,16 @@ public class SimpleCandidateService implements CandidateService {
     private final CandidateRepository candidateRepository;
     private final FileService fileService;
 
-    public SimpleCandidateService(CandidateRepository candidateRepository, FileService fileService) {
-        this.candidateRepository = candidateRepository;
+    public SimpleCandidateService(CandidateRepository sql2oCandidateRepository, FileService fileService) {
+        this.candidateRepository = sql2oCandidateRepository;
         this.fileService = fileService;
     }
 
     @Override
     public Candidate save(Candidate candidate, FileDto image) {
-        saveNewFile(candidate, image);
+        if (image != null && image.getContent() != null && image.getContent().length > 0) {
+            saveNewFile(candidate, image);
+        }
         return candidateRepository.save(candidate);
     }
 
@@ -45,17 +47,18 @@ public class SimpleCandidateService implements CandidateService {
 
     @Override
     public boolean update(Candidate candidate, FileDto image) {
-        var isNewFileEmpty = image.getContent().length == 0;
-        if (isNewFileEmpty) {
-            return candidateRepository.update(candidate);
+        /* Если передан новый файл (не null и не пустой)*/
+        if (image != null && image.getContent() != null && image.getContent().length > 0) {
+            var oldFileId = candidate.getFileId();
+            saveNewFile(candidate, image);
+            boolean isUpdated = candidateRepository.update(candidate);
+            if (isUpdated) {
+                fileService.deleteById(oldFileId);
+            }
+            return isUpdated;
         }
-        /* если передан новый не пустой файл, то старый удаляем, а новый сохраняем */
-        var oldFileId = candidate.getFileId();
-        saveNewFile(candidate, image);
-        var isUpdated = candidateRepository.update(candidate);
-        fileService.deleteById(oldFileId);
-        return isUpdated;
-
+        /* Если файл не передан или пустой - обновляем только данные вакансии*/
+        return candidateRepository.update(candidate);
     }
 
     @Override
