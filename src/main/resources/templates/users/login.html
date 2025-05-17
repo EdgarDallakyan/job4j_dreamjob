@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:include="~{fragments/header :: header}"></head>
+<body>
+<div th:replace="fragments/header :: navbar"></div>
+<div class="container mt-5">
+    <form th:action="@{/users/login}" method="post">
+        <div class="mb-3">
+            <label for="email" class="form-label"><b>Почта</b></label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label"><b>Пароль</b></label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Войти</button>
+        <div th:if="${param.error}" class="alert alert-danger mt-3">
+            Неверная почта или пароль!
+        </div>
+    </form>
+</div>
+
+<footer th:include="~{fragments/footer :: footer}"></footer>
+</body>
+</html>
