@@ -2,6 +2,7 @@ package ru.job4j.dreamjob.repository;
 
 import org.springframework.stereotype.Repository;
 import org.sql2o.Sql2o;
+import org.sql2o.Sql2oException;
 import ru.job4j.dreamjob.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +31,8 @@ public class Sql2oUserRepository implements UserRepository {
             int generatedId = query.executeUpdate().getKey(Integer.class);
             user.setId(generatedId);
             result = Optional.of(user);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+        } catch (Sql2oException e) {
+            LOGGER.error("Ошибка при сохранении пользователя: {}", e.getMessage(), e);
         }
         return result;
     }
@@ -46,8 +47,8 @@ public class Sql2oUserRepository implements UserRepository {
                     .addParameter("password", password);
             var user = query.setColumnMappings(User.COLUMN_MAPPING).executeAndFetchFirst(User.class);
             result = Optional.ofNullable(user);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+        } catch (Sql2oException e) {
+            LOGGER.error("Ошибка при поиске пользователя по email и паролю: {}", e.getMessage(), e);
         }
         return result;
     }
